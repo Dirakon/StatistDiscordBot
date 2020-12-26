@@ -20,9 +20,9 @@ bot = commands.Bot(command_prefix='!',intents=intents
 )
 theTime = 60
 for player in db:
-  pier = db[player]
+  pier = db[player][:8]
   db[player]=pier
-  print(db[player])
+  print(pier)
 guilder = None
 
 @bot.command(pass_context=True)  # разрешаем передавать агрументы
@@ -161,8 +161,10 @@ async def my_background_task():
                 #print(db[j])
                 if j not in db:
                     db[j] = [0]*7
+                    r = db[j]
+                    r.append({"pie":{}})
+                    db[j]=r
                 v =  db[j]
-                v.append({"pie":{}})
                 v[today]+=theTime
                 db[j] = v
         for i in guilder.members:
@@ -184,7 +186,7 @@ async def my_background_task():
             if act not in pier[7]['pie']:
               pier[7]['pie'][act]=0
             pier[7]['pie'][act]+=theTime
-           # print(act)
+            print(act)
             db[player]=pier
         await asyncio.sleep(theTime)
 keep_alive()
