@@ -23,11 +23,11 @@ for player in db:
   pier = db[player][:8]
   db[player]=pier
   print(pier)
-guilder = None
+#guilder = None
 
 @bot.command(pass_context=True)  # разрешаем передавать агрументы
 async def diagram(ctx, arg = None):  # создаем асинхронную фунцию бота
-    global guilder
+    #global guilder
     global channels
     sender = str(ctx.message.author).split('#')[0]
     if arg is not None:
@@ -53,8 +53,8 @@ async def diagram(ctx, arg = None):  # создаем асинхронную ф�
     plt.savefig("thing.png")
     await ctx.channel.send(file=discord.File("thing.png"))
 
-
-@bot.command(pass_context=True)  # разрешаем передавать агрументы
+'''
+#@bot.command(pass_context=True)  # разрешаем передавать агрументы
 async def start(ctx, arg = None):  # создаем асинхронную фунцию бота
     global guilder
     if guilder is not None:
@@ -64,7 +64,7 @@ async def start(ctx, arg = None):  # создаем асинхронную фу�
     guilder = gld
 
 
-    await ctx.send("started tracking this server now!")
+    await ctx.send("started tracking this server now!")'''
 
 def sorteg(a):
     return a[1]
@@ -72,7 +72,7 @@ def sorteg(a):
 
 @bot.command(pass_context=True)  # разрешаем передавать агрументы
 async def stats(ctx, arg = None):  # создаем асинхронную фунцию бота
-    global guilder
+   # global guilder
     message = ""
     arr = [[i,sum(db[i][:7])]for i in db if '#' not in i]
     arr.sort(key=sorteg,reverse=True)
@@ -89,7 +89,7 @@ async def coolgraph(ctx,arg=None):
     await coolGraph(ctx,arg)
 @bot.command(pass_context=True)  # разрешаем передавать агрументы
 async def coolGraph(ctx, arg = None):  # создаем асинхронную фунцию бота
-    global guilder
+    #global guilder
     arr = [[i,sum(db[i][:7])]for i in db if '#' not in i]
     arr.sort(key=sorteg,reverse=True)
     x = []
@@ -118,7 +118,7 @@ def getUserFromMention(mention):
 
 @bot.command(pass_context=True)  # разрешаем передавать агрументы
 async def personalGraph(ctx, arg = None):  # создаем асинхронную фунцию бота
-    global guilder
+   # global guilder
     global channels
     sender = str(ctx.message.author).split('#')[0]
     if arg is not None:
@@ -145,16 +145,15 @@ async def personalGraph(ctx, arg = None):  # создаем асинхронну
 
 
 async def my_background_task():
-    global guilder
+    #global guilder
     global channels
     global theTime
-    today = dt.datetime.now().weekday()
-    while guilder is None:
-        await asyncio.sleep(1)
+   # while guilder is None:
+  #      await asyncio.sleep(1)
     while True:
-        chans = guilder.channels
-
-        for i in chans:
+        today = dt.datetime.now().weekday()
+     #   chans = guilder.channels
+        for i in bot.get_all_channels():
             if str(i.type) == "voice":
               for j in i.members:
                 j = str(j).split('#')[0]
@@ -167,12 +166,14 @@ async def my_background_task():
                 v =  db[j]
                 v[today]+=theTime
                 db[j] = v
-        for i in guilder.members:
+        alr = {}
+        for i in bot.get_all_members():
             if i.bot:
               continue
             player = str(i).split('#')[0]
-            if player not in db:
+            if player not in db or player in alr:
               continue
+            alr[player]=0
             act = str(i.activity)
             if act == 'Spotify':
               if i.activities.__len__() > 1:
