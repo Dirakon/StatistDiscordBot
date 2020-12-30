@@ -69,11 +69,24 @@ async def diagram(ctx, arg = None):  # Circlular diagram
     lab= []
     dat = []
 
+    # Count total
+    total = 0
+    for j in db[sender][7]['pie'].keys():
+      total+=db[sender][7]['pie'][j]
+
     # Extract data from the database
     for j in db[sender][7]['pie'].keys():
+      # Sometimes there are unfun 'None's just flying around
       if j == 'None':
         continue
-      dat.append(db[sender][7]['pie'][j])
+
+      currentData = db[sender][7]['pie'][j]
+
+      # We don't show anything less then 3 % 
+      if currentData/total <= 0.03:
+        continue
+
+      dat.append(currentData)
       lab.append(j)
     
     # Debug log it
