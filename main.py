@@ -127,7 +127,8 @@ async def stats(ctx, arg = None):  # Global text stats
 async def coolGraph(ctx, arg = None):  # Global text stats in graph variant
     
     # Extracting data from the database
-    arr = [[i,sum(db[i][:7])]for i in db if '#' not in i]
+    dat = sum([sum(db[i][:7])for i in db])
+    arr = [[i,sum(db[i][:7])]for i in db if '#' not in i and sum(db[i][:7]) >= dat*0.03]  # Now only gets people who contibuted more than 3% total time
     arr.sort(key=sorteg,reverse=True)
     x = []
     y = []
